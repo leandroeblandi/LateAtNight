@@ -25,7 +25,7 @@ dist/
 
 ## Visão Geral
 
-Late at Night é um jogo simples baseado em Pygame, onde o jogador navega por um quarto escuro, evitando obstáculos e coletando itens para progredir através dos níveis. O objetivo é alcançar o interruptor localizado em posições aleatórias ao longo das bordas do quarto.
+Late at Night é um jogo simples baseado em Pygame, onde o jogador navega por um quarto escuro, evitando obstáculos para progredir através dos níveis. O objetivo é alcançar o interruptor localizado em posições aleatórias ao longo das bordas do quarto.
 
 ## Instalação
 
@@ -56,15 +56,14 @@ python late_at_night.py
 
 # Controles
 Use as teclas de seta para mover o personagem do jogador.
-Evite obstáculos e colete itens espalhados pelo quarto.
+Evite obstáculos.
 Alcance o interruptor localizado ao longo das bordas do quarto para avançar para o próximo nível.
 
 # Jogabilidade
 O jogador começa em uma posição aleatória dentro do quarto.
-Brinquedos estão espalhados pelo quarto, que o jogador pode coletar.
+Brinquedos estão espalhados pelo quarto, que o jogador deve evitar.
 Pisar em um brinquedo incrementa o contador de brinquedos para o nível atual.
-Após coletar todos os brinquedos, o jogador deve navegar até o interruptor para completar o nível e avançar para o próximo.
-Cada nível aumenta em dificuldade, com mais brinquedos para coletar e obstáculos para evitar.
+Cada nível aumenta em dificuldade, com mais obstáculos para evitar.
 
 ## Contribuições
 Contribuições para Late at Night são bem-vindas! Se você gostaria de contribuir com o projeto, siga estas etapas:

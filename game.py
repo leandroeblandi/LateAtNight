@@ -2,6 +2,8 @@ import pygame
 import sys
 import random
 
+# Comentário teste
+
 # Constants
 WIDTH = 600
 HEIGHT = 600
@@ -147,59 +149,6 @@ while True:
                 level_starting_point = (level_starting_point[0], max(0, level_starting_point[1] - MOVE_SPEED))
             if movement_keys[pygame.K_DOWN]:
                 level_starting_point = (level_starting_point[0], min(HEIGHT, level_starting_point[1] + MOVE_SPEED))
-
-        # Update the path with the player's current position
-        path.append(level_starting_point)
-
-        # Check if player reached the switch
-        if not reached_switch and \
-                level_starting_point[0] >= switch_x and level_starting_point[0] <= switch_x + SWITCH_WIDTH \
-                and level_starting_point[1] >= switch_y and level_starting_point[1] <= switch_y + SWITCH_HEIGHT:
-            # Player reached the switch
-            reached_switch = True
-            NUM_TOYS += 10  # Increase the number of toys by 10
-            level_counter += 1  # Increase level counter
-            total_toys_stepped_counter += toys_stepped_counter_this_level  # Update total toys stepped counter
-            toys_stepped_counter_this_level = 0  # Reset toys stepped counter for this level
-            for toy in toys:
-                if toy in toys_stepped_on:  # Only add already stepped on toys to the set
-                    toys_stepped_on.add(toy)
-            
-            # Make all invisible toys visible for 10 seconds
-            pygame.display.update()
-            for _ in range(int(PAUSE_TIME * 1000 / 100)):  # Divide by 100 to reduce the pause time
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        pygame.quit()
-                        sys.exit()
-                for toy in toys:
-                    toy_x, toy_y = toy
-                    if toy in toys_stepped_on:
-                        pygame.draw.circle(window, HIGHLIGHT_COLOR, (toy_x, toy_y), 3)
-                    else:
-                        pygame.draw.circle(window, TOY_COLOR, (toy_x, toy_y), 3)
-                pygame.display.update()
-                pygame.time.wait(100)  # Wait for 100 milliseconds
-
-            # Reset the game settings
-            toys = generate_toys()  # Generate new toys
-            break  # Exit the inner game loop to restart with new settings
-
-        # Check if player steps on a toy
-        for toy in toys:
-            toy_x, toy_y = toy
-            if level_starting_point[0] >= toy_x - PLAYER_SIZE and level_starting_point[0] <= toy_x + PLAYER_SIZE \
-                    and level_starting_point[1] >= toy_y - PLAYER_SIZE and level_starting_point[1] <= toy_y + PLAYER_SIZE:
-                # Player stepped on a toy
-                # Mark the toy as stepped on
-                toys_stepped_on.add(toy)
-                # Increment toys stepped on counters
-                toys_stepped_counter_this_level += 1
-                total_toys_stepped_counter += 1
-                # Reset player position to the starting point of the level
-                level_starting_point = initial_level_starting_point
-                # Remove the last position from the path
-                path = path[:-1]
 
         # Update the display
         pygame.display.update()

@@ -2,8 +2,6 @@ import pygame
 import sys
 import random
 
-# Comentário teste
-
 # Constants
 WIDTH = 600
 HEIGHT = 600
@@ -93,14 +91,14 @@ while True:
         window.fill(ROOM_COLOR)  # Fill the window with room color
 
         # Draw the player
-        pygame.draw.circle(window, PLAYER_COLOR, level_starting_point, PLAYER_SIZE)
+        pygame.draw.circle(window, PLAYER_COLOR, (int(level_starting_point[0]), int(level_starting_point[1])), PLAYER_SIZE)
 
         # Draw the switch
         pygame.draw.rect(window, SWITCH_COLOR, (switch_x, switch_y, SWITCH_WIDTH, SWITCH_HEIGHT))
 
         # Draw the path
         for point in path:
-            pygame.draw.circle(window, PATH_COLOR, point, PLAYER_SIZE // 2)
+            pygame.draw.circle(window, PATH_COLOR, (int(point[0]), int(point[1])), PLAYER_SIZE // 2)
 
         # Draw the toys and highlight those stepped on
         for toy in toys:
@@ -149,6 +147,17 @@ while True:
                 level_starting_point = (level_starting_point[0], max(0, level_starting_point[1] - MOVE_SPEED))
             if movement_keys[pygame.K_DOWN]:
                 level_starting_point = (level_starting_point[0], min(HEIGHT, level_starting_point[1] + MOVE_SPEED))
+
+            # Append the current player position to the path
+            path.append(level_starting_point)
+
+            # Check if the player has reached the switch
+            if switch_x <= level_starting_point[0] <= switch_x + SWITCH_WIDTH and switch_y <= level_starting_point[1] <= switch_y + SWITCH_HEIGHT:
+                reached_switch = True
+                level_counter += 1
+                toys_stepped_counter_this_level = 0
+                pygame.time.delay(PAUSE_TIME * 1000)
+                break  # Exit the inner loop to start a new level
 
         # Update the display
         pygame.display.update()

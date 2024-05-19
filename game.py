@@ -157,6 +157,12 @@ while True:
                 reached_switch = True
                 level_counter += 1
                 toys_stepped_counter_this_level = 0
+
+                # When the switch is reached, make all toys visible
+                for toy in toys:
+                    pygame.draw.circle(window, TOY_COLOR, (toy[0], toy[1]), 3)
+                pygame.display.update()
+
                 pygame.time.delay(PAUSE_TIME * 1000)
                 break  # Exit the inner loop to start a new level
 

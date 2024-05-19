@@ -114,6 +114,8 @@ while True:
                         total_toys_stepped_counter += 1
                         toys_stepped_counter_this_level += 1
                         pygame.draw.circle(window, HIGHLIGHT_COLOR, (toy_x, toy_y), 3)
+                        # Reset player's position to initial starting point
+                        level_starting_point = initial_level_starting_point
 
         # Draw the counters
         level_counter_text = font.render("Level: " + str(level_counter), True, (255, 255, 255))

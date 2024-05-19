@@ -35,8 +35,8 @@ toys_stepped_counter_this_level = 0
 def generate_toys():
     toys = []
     for _ in range(NUM_TOYS):
-        toy_x = random.randint(0, WIDTH)
-        toy_y = random.randint(0, HEIGHT)
+        toy_x = random.randint(10, WIDTH - 10)
+        toy_y = random.randint(10, HEIGHT - 10)
         toys.append((toy_x, toy_y))
     return toys
 
@@ -103,16 +103,17 @@ while True:
         # Draw the toys and highlight those stepped on
         for toy in toys:
             toy_x, toy_y = toy
-            if reached_switch:
-                if toy in toys_stepped_on:
-                    pygame.draw.circle(window, HIGHLIGHT_COLOR, (toy_x, toy_y), 3)
-                else:
-                    pygame.draw.circle(window, TOY_COLOR, (toy_x, toy_y), 3)
+            if toy in toys_stepped_on:
+                pygame.draw.circle(window, HIGHLIGHT_COLOR, (toy_x, toy_y), 3)
             else:
-                if toy in toys_stepped_on:  # Check if toy is stepped on
-                    pygame.draw.circle(window, HIGHLIGHT_COLOR, (toy_x, toy_y), 3)
+                if reached_switch:
+                    pygame.draw.circle(window, TOY_COLOR, (toy_x, toy_y), 3)
                 else:
-                    pygame.draw.circle(window, ROOM_COLOR, (toy_x, toy_y), 3)  # Hide unstepped toys
+                    if level_starting_point[0] - 3 <= toy_x <= level_starting_point[0] + 3 and level_starting_point[1] - 3 <= toy_y <= level_starting_point[1] + 3:
+                        toys_stepped_on.add(toy)
+                        total_toys_stepped_counter += 1
+                        toys_stepped_counter_this_level += 1
+                        pygame.draw.circle(window, HIGHLIGHT_COLOR, (toy_x, toy_y), 3)
 
         # Draw the counters
         level_counter_text = font.render("Level: " + str(level_counter), True, (255, 255, 255))

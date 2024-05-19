@@ -166,6 +166,7 @@ while True:
                 pygame.display.update()
 
                 pygame.time.delay(PAUSE_TIME * 1000)
+                path = []  # Reset the path
                 break  # Exit the inner loop to start a new level
 
         # Update the display

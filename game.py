@@ -153,14 +153,8 @@ def main():
                     pygame.draw.circle(window, HIGHLIGHT_COLOR, toy, 3)
 
             # Draw the counters
-            level_counter_text = font.render("Level: " + str(level_counter), True, (255, 255, 255))
-            window.blit(level_counter_text, (WIDTH - 120, 20))
-
-            total_toys_stepped_counter_text = font.render("Total Toys Stepped On: " + str(total_toys_stepped_counter), True, (255, 255, 255))
-            window.blit(total_toys_stepped_counter_text, (WIDTH - 220, 50))
-
-            toys_stepped_counter_this_level_text = font.render("Toys Stepped On This Level: " + str(toys_stepped_counter_this_level), True, (255, 255, 255))
-            window.blit(toys_stepped_counter_this_level_text, (WIDTH - 250, 80))
+            counters_text = font.render("Level: " + str(level_counter) + " | Total: " + str(total_toys_stepped_counter) + " | This Level: " + str(toys_stepped_counter_this_level), True, (255, 255, 255))
+            window.blit(counters_text, (10, 10))
 
             # Event handling
             for event in pygame.event.get():

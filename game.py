@@ -153,7 +153,7 @@ def main():
                     pygame.draw.circle(window, HIGHLIGHT_COLOR, toy, 3)
 
             # Draw the counters
-            counters_text = font.render("Level: " + str(level_counter) + " | Total: " + str(total_toys_stepped_counter) + " | This Level: " + str(toys_stepped_counter_this_level), True, (255, 255, 255))
+            counters_text = font.render("Level: " + str(level_counter) + " | Total: " + str(total_toys_stepped_counter) + " | This Level: " + str(toys_stepped_counter_this_level) + " | Difficulty: " + difficulty.capitalize(), True, (255, 255, 255))
             window.blit(counters_text, (10, 10))
 
             # Event handling
@@ -162,6 +162,8 @@ def main():
                     pygame.quit()
                     sys.exit()
                 elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:  # Check for Esc key press
+                        main()  # Go back to the menu
                     if not reached_switch:
                         if event.key in movement_keys:
                             movement_keys[event.key] = True

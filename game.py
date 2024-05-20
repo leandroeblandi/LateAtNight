@@ -12,9 +12,9 @@ SWITCH_COLOR = (255, 255, 0)  # Yellow
 PATH_COLOR = (100, 100, 100)   # Gray for the path
 TOY_COLOR = (255, 0, 0)        # Red for toys
 HIGHLIGHT_COLOR = (0, 255, 0)  # Green for highlighted toys
-NUM_TOYS = 10  # Initial number of toys to scatter
+INITIAL_NUM_TOYS = 10  # Initial number of toys to scatter
 MOVE_SPEED = 0.3  # Movement speed of the player (slower)
-PAUSE_TIME = 5  # Time to pause after reaching the switch (in seconds) - halved
+PAUSE_TIME = 5  # Time to pause after reaching the switch (in seconds)
 
 # Initialize Pygame
 pygame.init()
@@ -32,15 +32,16 @@ total_toys_stepped_counter = 0
 toys_stepped_counter_this_level = 0
 
 # Generate random positions for toys
-def generate_toys():
+def generate_toys(num_toys):
     toys = []
-    for _ in range(NUM_TOYS):
+    for _ in range(num_toys):
         toy_x = random.randint(10, WIDTH - 10)
         toy_y = random.randint(10, HEIGHT - 10)
         toys.append((toy_x, toy_y))
     return toys
 
-toys = generate_toys()
+# Initial toy generation
+toys = generate_toys(INITIAL_NUM_TOYS)
 
 # Set up a set to keep track of which toys have been stepped on
 toys_stepped_on = set()
@@ -57,25 +58,25 @@ while True:
     # Random position for the switch along the borders of the window
     switch_side = random.choice(["top", "bottom", "left", "right"])
     if switch_side == "top":
-        switch_x = random.randint(0, WIDTH - 20)  # Adjusted width for top border - halved
+        switch_x = random.randint(0, WIDTH - 20)
         switch_y = 0
-        SWITCH_WIDTH = 20  # Halved
-        SWITCH_HEIGHT = 5   # Halved
+        SWITCH_WIDTH = 20
+        SWITCH_HEIGHT = 5
     elif switch_side == "bottom":
-        switch_x = random.randint(0, WIDTH - 20)  # Adjusted width for bottom border - halved
-        switch_y = HEIGHT - 5   # Halved
-        SWITCH_WIDTH = 20  # Halved
-        SWITCH_HEIGHT = 5   # Halved
+        switch_x = random.randint(0, WIDTH - 20)
+        switch_y = HEIGHT - 5
+        SWITCH_WIDTH = 20
+        SWITCH_HEIGHT = 5
     elif switch_side == "left":
         switch_x = 0
-        switch_y = random.randint(0, HEIGHT - 20)  # Adjusted height for left border - halved
-        SWITCH_WIDTH = 5    # Halved
-        SWITCH_HEIGHT = 20  # Halved
+        switch_y = random.randint(0, HEIGHT - 20)
+        SWITCH_WIDTH = 5
+        SWITCH_HEIGHT = 20
     else:
-        switch_x = WIDTH - 5   # Halved
-        switch_y = random.randint(0, HEIGHT - 20)  # Adjusted height for right border - halved
-        SWITCH_WIDTH = 5    # Halved
-        SWITCH_HEIGHT = 20  # Halved
+        switch_x = WIDTH - 5
+        switch_y = random.randint(0, HEIGHT - 20)
+        SWITCH_WIDTH = 5
+        SWITCH_HEIGHT = 20
 
     # List to store the path
     path = []
@@ -100,22 +101,17 @@ while True:
         for point in path:
             pygame.draw.circle(window, PATH_COLOR, (int(point[0]), int(point[1])), PLAYER_SIZE // 2)
 
-        # Draw the toys and highlight those stepped on
-        for toy in toys:
-            toy_x, toy_y = toy
-            if toy in toys_stepped_on:
-                pygame.draw.circle(window, HIGHLIGHT_COLOR, (toy_x, toy_y), 3)
-            else:
-                if reached_switch:
-                    pygame.draw.circle(window, TOY_COLOR, (toy_x, toy_y), 3)
+        # Draw the toys
+        if reached_switch:
+            for toy in toys:
+                toy_x, toy_y = toy
+                if toy in toys_stepped_on:
+                    pygame.draw.circle(window, HIGHLIGHT_COLOR, (toy_x, toy_y), 3)
                 else:
-                    if level_starting_point[0] - 3 <= toy_x <= level_starting_point[0] + 3 and level_starting_point[1] - 3 <= toy_y <= level_starting_point[1] + 3:
-                        toys_stepped_on.add(toy)
-                        total_toys_stepped_counter += 1
-                        toys_stepped_counter_this_level += 1
-                        pygame.draw.circle(window, HIGHLIGHT_COLOR, (toy_x, toy_y), 3)
-                        # Reset player's position to initial starting point
-                        level_starting_point = initial_level_starting_point
+                    pygame.draw.circle(window, TOY_COLOR, (toy_x, toy_y), 3)
+        else:
+            for toy in toys_stepped_on:
+                pygame.draw.circle(window, HIGHLIGHT_COLOR, toy, 3)
 
         # Draw the counters
         level_counter_text = font.render("Level: " + str(level_counter), True, (255, 255, 255))
@@ -154,6 +150,15 @@ while True:
             # Append the current player position to the path
             path.append(level_starting_point)
 
+            # Check if the player has stepped on a toy
+            for toy in toys:
+                toy_x, toy_y = toy
+                if level_starting_point[0] - 3 <= toy_x <= level_starting_point[0] + 3 and level_starting_point[1] - 3 <= toy_y <= level_starting_point[1] + 3:
+                    toys_stepped_on.add(toy)
+                    total_toys_stepped_counter += 1
+                    toys_stepped_counter_this_level += 1
+                    level_starting_point = initial_level_starting_point  # Reset player's position to initial starting point
+
             # Check if the player has reached the switch
             if switch_x <= level_starting_point[0] <= switch_x + SWITCH_WIDTH and switch_y <= level_starting_point[1] <= switch_y + SWITCH_HEIGHT:
                 reached_switch = True
@@ -162,13 +167,18 @@ while True:
 
                 # When the switch is reached, make all toys visible
                 for toy in toys:
-                    pygame.draw.circle(window, TOY_COLOR, (toy[0], toy[1]), 3)
+                    if toy in toys_stepped_on:
+                        pygame.draw.circle(window, HIGHLIGHT_COLOR, (toy[0], toy[1]), 3)
+                    else:
+                        pygame.draw.circle(window, TOY_COLOR, (toy[0], toy[1]), 3)
                 pygame.display.update()
 
                 pygame.time.delay(PAUSE_TIME * 1000)
-                path = []  # Reset the path
+
+                # Generate new toys for the next level
+                toys = generate_toys(INITIAL_NUM_TOYS + 10 * (level_counter - 1))
+                toys_stepped_on = set()  # Reset the stepped on toys
                 break  # Exit the inner loop to start a new level
 
         # Update the display
         pygame.display.update()
-        

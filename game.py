@@ -48,12 +48,30 @@ def show_menu():
     menu_options = ['Easy', 'Medium', 'Hard']
     selected_option = 0
 
+    # Title and introduction text
+    title_text = menu_font.render("Late At Night", True, (255, 255, 255))
+    intro_text_line1 = "Welcome to 'Late At Night', a mysterious journey"
+    intro_text_line2 = "through darkness... Use arrow keys to navigate."
+    intro_text1 = font.render(intro_text_line1, True, (255, 255, 255))
+    intro_text2 = font.render(intro_text_line2, True, (255, 255, 255))
+    instructions_text = font.render("Reach the switch to move on and avoid the hidden toys.", True, (255, 255, 255))
+
+    # Calculate the total height of the text to ensure it fits within the window
+    total_text_height = title_text.get_height() + intro_text1.get_height() + intro_text2.get_height() + instructions_text.get_height() + 50  # Add 50 for padding
+
     while True:
         window.fill(ROOM_COLOR)
+        # Render and display title and introduction text
+        window.blit(title_text, (WIDTH // 2 - title_text.get_width() // 2, HEIGHT // 4 - total_text_height // 2))
+        window.blit(intro_text1, (WIDTH // 2 - intro_text1.get_width() // 2, HEIGHT // 4 - total_text_height // 2 + title_text.get_height()))
+        window.blit(intro_text2, (WIDTH // 2 - intro_text2.get_width() // 2, HEIGHT // 4 - total_text_height // 2 + title_text.get_height() + intro_text1.get_height()))
+        window.blit(instructions_text, (WIDTH // 2 - instructions_text.get_width() // 2, HEIGHT // 4 - total_text_height // 2 + title_text.get_height() + intro_text1.get_height() + intro_text2.get_height()))
+
+        # Render difficulty options below the introduction text
         for idx, option in enumerate(menu_options):
             color = (255, 255, 255) if idx == selected_option else (100, 100, 100)
             option_text = menu_font.render(option, True, color)
-            window.blit(option_text, (WIDTH // 2 - option_text.get_width() // 2, HEIGHT // 2 - 50 + idx * 40))
+            window.blit(option_text, (WIDTH // 2 - option_text.get_width() // 2, HEIGHT // 4 + total_text_height // 2 + idx * 40))
 
         pygame.display.update()
 
